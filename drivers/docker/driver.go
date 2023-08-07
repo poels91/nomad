@@ -1441,7 +1441,7 @@ func (d *Driver) detectIP(c *docker.Container, driverConfig *TaskConfig) (string
 	transparentNetwork := false
 	for name, net := range c.NetworkSettings.Networks {
 		if net.IPAddress == "" {
-			netInfo, _ := dockerclient.NetworkInfo(net.NetworkID)
+			netInfo, _ := dockerClient.NetworkInfo(net.NetworkID)
 			transparentNetwork = transparentNetwork || netInfo.Driver == "transparent"
 
 			// Ignore networks without an IP address
@@ -1486,7 +1486,7 @@ func (d *Driver) detectIP(c *docker.Container, driverConfig *TaskConfig) (string
 			timesWaited++
 			time.Sleep(1 * time.Second)
 
-			dExec, execErr := dockerclient.CreateExec(de)
+			dExec, execErr := dockerClient.CreateExec(de)
 			if execErr != nil {
 				d.logger.Error("Error: ", "error", execErr)
 				return "", false
@@ -1499,7 +1499,7 @@ func (d *Driver) detectIP(c *docker.Container, driverConfig *TaskConfig) (string
 				OutputStream: &stdout,
 			}
 
-			if startErr := dockerclient.StartExec(execId, execOpts); startErr != nil {
+			if startErr := dockerClient.StartExec(execId, execOpts); startErr != nil {
 				d.logger.Warn("failed to retrieve ip address from container with ping", "container_id", c.ID)
 				return "", false
 			}
@@ -1536,7 +1536,7 @@ func (d *Driver) detectIP(c *docker.Container, driverConfig *TaskConfig) (string
 			Container:    c.ID,
 		}
 
-		adminExec, adminExecErr := dockerclient.CreateExec(de)
+		adminExec, adminExecErr := dockerClient.CreateExec(de)
 		if adminExecErr != nil {
 			d.logger.Error("Error: ", "error", adminExecErr)
 			return "", false
@@ -1549,7 +1549,7 @@ func (d *Driver) detectIP(c *docker.Container, driverConfig *TaskConfig) (string
 			OutputStream: &adminStdOut,
 		}
 
-		if startErr := dockerclient.StartExec(adminExecId, adminExecOpts); startErr != nil {
+		if startErr := dockerClient.StartExec(adminExecId, adminExecOpts); startErr != nil {
 			d.logger.Warn("failed to append hosts file", "container_id", c.ID)
 			return "", false
 		}
@@ -1575,7 +1575,7 @@ func (d *Driver) detectIP(c *docker.Container, driverConfig *TaskConfig) (string
 			User:         userName,
 		}
 
-		dExec, execErr := dockerclient.CreateExec(de)
+		dExec, execErr := dockerClient.CreateExec(de)
 		if execErr != nil {
 			d.logger.Error("Error: ", "error", execErr)
 			return "", false
@@ -1588,7 +1588,7 @@ func (d *Driver) detectIP(c *docker.Container, driverConfig *TaskConfig) (string
 			OutputStream: &stdout,
 		}
 
-		if startErr := dockerclient.StartExec(execId, execOpts); startErr != nil {
+		if startErr := dockerClient.StartExec(execId, execOpts); startErr != nil {
 			d.logger.Warn("failed to append hosts file", "container_id", c.ID)
 			return "", false
 		}
