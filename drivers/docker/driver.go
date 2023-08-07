@@ -1437,6 +1437,11 @@ func (d *Driver) detectIP(c *docker.Container, driverConfig *TaskConfig) (string
 		return "", false
 	}
 
+	dockerClient, err := d.getDockerClient()
+	if err != nil {
+		return nil, nil, fmt.Errorf("Failed to create docker client: %v", err)
+	}
+
 	ip, ipName := "", ""
 	auto := false
 	transparentNetwork := false
